@@ -1,17 +1,17 @@
 ---
 name: Feature
-about: Erstelle ein neues Feature
-labels: "feature"
+about: Create a new feature
+labels: “feature”
 ---
 
-## Beschreibung
+## Description
 
-<!-- Die textuelle Beschreibung der User Story -->
+<!-- The textual description of the user story -->
 
-## Akzeptanzkriterien / DoD
+## Acceptance criteria / DoD
 
-<!-- Eine Checkliste mit Kriterien, die erfüllt werden müssen, damit die Story als vollständig gilt. -->
+<!-- A checklist of criteria that must be met for the story to be considered complete. -->
 
-## Zusätzliche Informationen
+## Additional information
 
-<!-- Optionaler Kontext, Links oder Notizen, welche Anderen helfen, diesen Issue besser zu verstehen. -->
+<!-- Optional context, links, or notes that help others better understand this issue. -->

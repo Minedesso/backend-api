@@ -1,37 +1,37 @@
 ---
 name: Bug report
-about: Einen Bug melden
-labels: "bug"
+about: Report a bug
+labels: “bug”
 ---
 
-## Beschreibung
+## Description
 
-<!-- Eine klare und präzise Beschreibung des Bugs. Was hat du erwartet, und was ist passiert? -->
+<!-- A clear and concise description of the bug. What did you expect to happen, and what actually happened? -->
 
-## Reproduzieren des Bugs
+## Reproducing the bug
 
-<!-- Erkläre Schritt für Schritt, was du getan hast, bevor der Bug aufgetreten ist.
-Beispiel:
-1. Gehe auf '...'
-2. Klicke auf '...'
-3. Scrolle runter bis '...'
-4. Folgender Fehler tritt auf -->
+<!-- Explain step by step what you did before the bug occurred.
+Example:
+1. Go to ‘...’
+2. Click on ‘...’
+3. Scroll down to ‘...’
+4. The following error occurs -->
 
-## Aktuelles Verhalten
+## Current behavior
 
-<!-- Beschreibe, was aktuell passiert, was nicht passieren sollte. -->
+<!-- Describe what is currently happening that should not be happening. -->
 
-## Erwartetes Verhalten
+## Expected behavior
 
-<!-- Beschreibe, was du Anstatt des Fehlers erwartet hättest. -->
+<!-- Describe what you would have expected instead of the error. -->
 
-## Umgebung
+## Environment
 
-<!-- Beschreibe deine Laufzeitumgebung, ungefähr so:
-- OS: [z.B. Windows 10, macOS 14.2]
-- Browser: [z.B. Chrome 123, Firefox 110]
-- App-Version oder commit-hash -->
+<!-- Describe your runtime environment, something like this:
+- OS: [e.g., Windows 10, macOS 14.2]
+- Browser: [e.g., Chrome 123, Firefox 110]
+- App version or commit hash -->
 
-## Zusätzliche Informationen
+## Additional information
 
-<!-- Weiterer Kontext, weitere Konfiguration, oder Informaitionen, welche uns helfen könnten, den Fehler zu beheben. -->
+<!-- Further context, additional configuration, or information that could help us fix the error. -->
