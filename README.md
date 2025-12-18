@@ -88,9 +88,10 @@ Kurze Beschreibung des Projekts:
 
 ### Entwicklungsworkflow
 1. Feature-Branch erstellen
-2. PR erstellen
-3. Implementierung
-4. Tests durchführen
+   - Naming: (#TicketNr)-ticket-name
+3. PR erstellen
+4. Implementierung
+5. Tests durchführen
 6. Code Review
 7. Merge in `main`
 
@@ -100,7 +101,7 @@ Kurze Beschreibung des Projekts:
 3. Plugin lädt auf Server
 4. Funktion prüfen
 5. CleanCode prüfen
-6. Rebasen
+6. Rebasen auf `main`
 7. Mergen lassen vom Entwickler
 
 ### Release-Workflow
