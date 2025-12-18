@@ -67,7 +67,7 @@ Kurze Beschreibung des Projekts:
 - Maven Module
 
 ### Frontend
-- Angular
+- React Navive
 
 ---
 
