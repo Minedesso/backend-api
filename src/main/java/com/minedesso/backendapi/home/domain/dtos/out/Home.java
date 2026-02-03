@@ -3,11 +3,8 @@ package com.minedesso.backendapi.home.domain.dtos.out;
 import com.minedesso.backendapi.home.persistence.HomeEntity;
 import lombok.Data;
 
-import java.util.UUID;
-
 @Data
 public class Home {
-    private UUID ownerUuid;
     private String name;
 
     private String worldName;

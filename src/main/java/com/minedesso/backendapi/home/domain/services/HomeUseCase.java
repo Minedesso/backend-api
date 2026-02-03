@@ -5,15 +5,16 @@ import com.minedesso.backendapi.home.domain.dtos.out.Home;
 import com.minedesso.backendapi.home.domain.utils.exceptions.HomeNotFoundException;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface HomeUseCase {
 
     void save(HomeSaveCommand homeSaveCommand);
 
-    Home getHome(String ownerUuid, String homeName) throws HomeNotFoundException;
+    Home getHome(UUID ownerUuid, String homeName) throws HomeNotFoundException;
 
-    List<Home> getAll(String ownerUuid);
+    List<Home> getAll(UUID ownerUuid);
 
-    void deleteHome(String ownerUuid, String homeName) throws HomeNotFoundException;
+    void deleteHome(UUID ownerUuid, String homeName) throws HomeNotFoundException;
 
 }

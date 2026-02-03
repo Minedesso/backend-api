@@ -26,7 +26,7 @@ public class MinecraftPlayerEntity {
     private LocalDateTime lastLoginDate;
     private boolean online;
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_uuid")
     private List<HomeEntity> homes;
 
@@ -61,5 +61,20 @@ public class MinecraftPlayerEntity {
 
     public void decreaseBalance(double amount) throws TransactionValidationException {
         this.balance.decrease(amount);
+    }
+
+    public void addHome(HomeEntity home) {
+        this.homes.add(home);
+    }
+
+    public void removeHome(HomeEntity home) {
+        this.homes.remove(home);
+    }
+
+    public HomeEntity getHomeByName(String name) {
+        return this.homes.stream()
+                .filter(h -> h.getName().equalsIgnoreCase(name))
+                .findFirst()
+                .orElse(null);
     }
 }

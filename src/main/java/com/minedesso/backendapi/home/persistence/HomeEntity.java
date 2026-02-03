@@ -1,7 +1,6 @@
 package com.minedesso.backendapi.home.persistence;
 
 import com.minedesso.backendapi.home.domain.dtos.in.HomeSaveCommand;
-import com.minedesso.backendapi.minecraftplayer.persistence.MinecraftPlayerEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,13 +24,13 @@ public class HomeEntity {
     private float pitch;
 
     public HomeEntity(HomeSaveCommand command) {
-        this.name = command.getName();
-        this.worldName = command.getWorldName();
-        this.x = command.getX();
-        this.y = command.getY();
-        this.z = command.getZ();
-        this.yaw = command.getYaw();
-        this.pitch = command.getPitch();
+        this.name = command.name();
+        this.worldName = command.worldName();
+        this.x = command.x();
+        this.y = command.y();
+        this.z = command.z();
+        this.yaw = command.yaw();
+        this.pitch = command.pitch();
     }
 
 }
