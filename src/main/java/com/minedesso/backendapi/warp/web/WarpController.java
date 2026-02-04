@@ -19,10 +19,15 @@ public class WarpController {
 
     private final WarpUseCase warpUseCase;
 
-    @GetMapping("all")
+    @PostMapping()
+    public ResponseEntity<Void> save(@RequestBody WarpSaveCommand command) {
+        warpUseCase.save(command);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/all")
     public ResponseEntity<List<Warp>> getAll() {
-        List<Warp> warps = warpUseCase.getAll();
-        return ResponseEntity.ok(warps);
+        return ResponseEntity.ok(warpUseCase.getAll());
     }
 
     @GetMapping("/{name}")
@@ -34,12 +39,6 @@ public class WarpController {
             log.debug(e.getMessage(), e);
             return ResponseEntity.notFound().build();
         }
-    }
-
-    @PostMapping()
-    public ResponseEntity<Void> save(@RequestBody WarpSaveCommand command) {
-        warpUseCase.save(command);
-        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{name}")
