@@ -33,9 +33,8 @@ public class MinecraftPlayerController {
     }
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<MinecraftPlayer> getById(@PathVariable("uuid") String uuidString) {
+    public ResponseEntity<MinecraftPlayer> getById(@PathVariable("uuid") UUID uuid) {
         try {
-            UUID uuid = UUID.fromString(uuidString);
             MinecraftPlayer minecraftPlayer = this.useCase.getById(uuid);
             return new ResponseEntity<>(minecraftPlayer, HttpStatus.OK);
         } catch (MinecraftPlayerNotFoundException e) {
@@ -45,9 +44,8 @@ public class MinecraftPlayerController {
     }
 
     @DeleteMapping("/{uuid}")
-    public ResponseEntity<Void> delete(@PathVariable("uuid") String uuidString) {
+    public ResponseEntity<Void> delete(@PathVariable("uuid") UUID uuid) {
         try {
-            UUID uuid = UUID.fromString(uuidString);
             this.useCase.delete(uuid);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (MinecraftPlayerNotFoundException e) {

@@ -5,6 +5,7 @@ import com.minedesso.backendapi.minecraftplayer.domain.dtos.out.MinecraftPlayer;
 import com.minedesso.backendapi.minecraftplayer.domain.utils.exceptions.MinecraftPlayerNotFoundException;
 import com.minedesso.backendapi.minecraftplayer.persistence.MinecraftPlayerEntity;
 import com.minedesso.backendapi.minecraftplayer.persistence.MinecraftPlayerRepository;
+import com.minedesso.backendapi.settings.persistence.SettingsRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,42 +16,44 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class MinecraftPlayerService implements MinecraftPlayerUseCase {
-    private final MinecraftPlayerRepository repository;
+    private final MinecraftPlayerRepository minecraftPlayerRepository;
+    private final SettingsRepository settingsRepository;
 
     @Override
     public void save(MinecraftPlayerSaveCommand command) {
-        Optional<MinecraftPlayerEntity> minecraftPlayerOpt = this.repository.findById(command.getUuid());
+        Optional<MinecraftPlayerEntity> minecraftPlayerEntityOpt = this.minecraftPlayerRepository
+                .findById(command.getUuid());
 
-        MinecraftPlayerEntity minecraftPlayer;
-        if (minecraftPlayerOpt.isPresent()) {
-            minecraftPlayer = minecraftPlayerOpt.get();
-            minecraftPlayer.update(command);
+        MinecraftPlayerEntity minecraftPlayerEntity;
+        if (minecraftPlayerEntityOpt.isPresent()) {
+            minecraftPlayerEntity = minecraftPlayerEntityOpt.get();
+            minecraftPlayerEntity.update(command);
         } else {
-            minecraftPlayer = new MinecraftPlayerEntity(command);
+            minecraftPlayerEntity = new MinecraftPlayerEntity(command, this.settingsRepository.findStartBalance());
         }
 
-        this.repository.save(minecraftPlayer);
+        this.minecraftPlayerRepository.save(minecraftPlayerEntity);
     }
 
     @Override
     public List<MinecraftPlayer> getAll() {
-        return this.repository.findAll().stream()
+        return this.minecraftPlayerRepository.findAll().stream()
                 .map(MinecraftPlayer::new)
                 .toList();
     }
 
     @Override
     public MinecraftPlayer getById(UUID uuid) throws MinecraftPlayerNotFoundException {
-        MinecraftPlayerEntity minecraftPlayer = this.repository.findById(uuid)
+        MinecraftPlayerEntity minecraftPlayerEntity = this.minecraftPlayerRepository.findById(uuid)
                 .orElseThrow(() -> new MinecraftPlayerNotFoundException(uuid));
-        return new MinecraftPlayer(minecraftPlayer);
+        return new MinecraftPlayer(minecraftPlayerEntity);
     }
 
     @Override
     public void delete(UUID uuid) throws MinecraftPlayerNotFoundException {
-        if (!this.repository.existsById(uuid)) {
+        if (!this.minecraftPlayerRepository.existsById(uuid)) {
             throw new MinecraftPlayerNotFoundException(uuid);
         }
-        this.repository.deleteById(uuid);
+        this.minecraftPlayerRepository.deleteById(uuid);
     }
 }
