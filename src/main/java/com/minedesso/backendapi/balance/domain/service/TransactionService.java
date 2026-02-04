@@ -19,7 +19,7 @@ public class TransactionService implements TransactionUseCase {
     private final MinecraftPlayerRepository minecraftPlayerRepository;
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void transact(TransactionCommand command) throws TransactionValidationException {
         command.validate();
 
@@ -33,11 +33,8 @@ public class TransactionService implements TransactionUseCase {
         MinecraftPlayerEntity receiver = this.minecraftPlayerRepository.findById((receiverUuid))
                 .orElseThrow(() -> new IllegalStateException("receiver not found!"));
 
-        sender.increaseBalance(amount);
-        receiver.decreaseBalance(amount);
-
-        this.minecraftPlayerRepository.save(sender);
-        this.minecraftPlayerRepository.save(receiver);
+        sender.decreaseBalance(amount);
+        receiver.increaseBalance(amount);
 
         TransactionEntity transactionEntity = new TransactionEntity(command);
         this.transactionRepository.save(transactionEntity);

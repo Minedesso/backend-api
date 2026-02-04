@@ -8,8 +8,8 @@ import java.util.UUID;
 
 @Data
 public class TransactionCommand {
-    private String sender; //uuid string
-    private String receiver; // uuid string
+    private UUID sender;
+    private UUID receiver;
     private double amount;
     private String purposeOfUse;
     private TransactionContext context;
@@ -30,13 +30,5 @@ public class TransactionCommand {
         if (this.context == null || this.context.getSource() == null || this.context.getType() == null) {
             throw new TransactionValidationException("context must be given!");
         }
-    }
-
-    public UUID getSender() {
-        return UUID.fromString(this.sender);
-    }
-
-    public UUID getReceiver() {
-        return UUID.fromString(this.receiver);
     }
 }
