@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class HomeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 
@@ -24,13 +24,13 @@ public class HomeEntity {
     private float pitch;
 
     public HomeEntity(HomeSaveCommand command) {
-        this.name = command.name();
-        this.worldName = command.worldName();
-        this.x = command.x();
-        this.y = command.y();
-        this.z = command.z();
-        this.yaw = command.yaw();
-        this.pitch = command.pitch();
+        this.name = command.getName();
+        this.worldName = command.getWorldName();
+        this.x = command.getX();
+        this.y = command.getY();
+        this.z = command.getZ();
+        this.yaw = command.getYaw();
+        this.pitch = command.getPitch();
     }
 
 }

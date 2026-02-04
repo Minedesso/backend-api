@@ -20,12 +20,12 @@ public class HomeService implements HomeUseCase {
     private final MinecraftPlayerRepository minecraftPlayerRepository;
 
     @Override
-    public void save(HomeSaveCommand homeSaveCommand) {
-        MinecraftPlayerEntity ownerEntity = this.minecraftPlayerRepository.findById(homeSaveCommand.ownerUuid())
+    public void save(HomeSaveCommand homeSaveCommand) throws HomeAlreadyExistsException {
+        MinecraftPlayerEntity ownerEntity = this.minecraftPlayerRepository.findById(homeSaveCommand.getOwnerUuid())
                 .orElseThrow(() -> new IllegalStateException("Owner not found"));
 
-        if(ownerEntity.getHomeByName(homeSaveCommand.name()) != null) {
-            throw new HomeAlreadyExistsException(homeSaveCommand.name());
+        if(ownerEntity.getHomeByName(homeSaveCommand.getName()).isPresent()) {
+            throw new HomeAlreadyExistsException(homeSaveCommand.getName());
         }
 
         HomeEntity homeEntity = new HomeEntity(homeSaveCommand);
@@ -38,16 +38,14 @@ public class HomeService implements HomeUseCase {
         MinecraftPlayerEntity ownerEntity = this.minecraftPlayerRepository.findById(ownerUuid)
                 .orElseThrow(() -> new IllegalStateException("Owner not found"));
 
-        HomeEntity homeEntity = ownerEntity.getHomeByName(homeName);
+        HomeEntity homeEntity = ownerEntity.getHomeByName(homeName)
+                .orElseThrow(() -> new HomeNotFoundException(homeName));
 
-        if(homeEntity == null) {
-            throw new HomeNotFoundException(homeName);
-        }
         return new Home(homeEntity);
     }
 
     @Override
-    public List<Home> getAll(UUID ownerUuid) {
+    public List<Home> getAllOfPlayer(UUID ownerUuid) {
         return this.minecraftPlayerRepository.findById(ownerUuid)
                 .orElseThrow(() -> new IllegalStateException("Owner not found"))
                 .getHomes().stream()
@@ -60,11 +58,8 @@ public class HomeService implements HomeUseCase {
         MinecraftPlayerEntity ownerEntity = this.minecraftPlayerRepository.findById(ownerUuid)
                 .orElseThrow(() -> new IllegalStateException("Owner not found"));
 
-        HomeEntity homeEntity = ownerEntity.getHomeByName(homeName);
-
-        if(homeEntity == null) {
-            throw new HomeNotFoundException(homeName);
-        }
+        HomeEntity homeEntity = ownerEntity.getHomeByName(homeName)
+                .orElseThrow(() -> new HomeNotFoundException(homeName));
 
         ownerEntity.removeHome(homeEntity);
         this.minecraftPlayerRepository.save(ownerEntity);

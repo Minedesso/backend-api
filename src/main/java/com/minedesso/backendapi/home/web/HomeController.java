@@ -3,8 +3,11 @@ package com.minedesso.backendapi.home.web;
 import com.minedesso.backendapi.home.domain.dtos.in.HomeSaveCommand;
 import com.minedesso.backendapi.home.domain.dtos.out.Home;
 import com.minedesso.backendapi.home.domain.services.HomeService;
+import com.minedesso.backendapi.home.domain.services.HomeUseCase;
+import com.minedesso.backendapi.home.domain.utils.exceptions.HomeAlreadyExistsException;
 import com.minedesso.backendapi.home.domain.utils.exceptions.HomeNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,37 +19,41 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class HomeController {
 
-    private final HomeService homeService;
+    private final HomeUseCase homeUseCase;
 
     @PostMapping()
     public ResponseEntity<Void> saveHome(@RequestBody HomeSaveCommand homeSaveCommand) {
-        homeService.save(homeSaveCommand);
-        return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("/{ownerUuid}/{homeName}")
-    public ResponseEntity<Void> deleteHome(@PathVariable UUID ownerUuid, @PathVariable String homeName) {
         try {
-            homeService.deleteHome(ownerUuid, homeName);
+            homeUseCase.save(homeSaveCommand);
             return ResponseEntity.ok().build();
-        } catch (HomeNotFoundException e) {
-            return ResponseEntity.notFound().build();
+        } catch (HomeAlreadyExistsException e) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
 
-    @GetMapping("/{ownerUuid}/{homeName}")
-    public ResponseEntity<Home> getHome(@PathVariable UUID ownerUuid, @PathVariable String homeName) {
+    @GetMapping("/{owner-uuid}/{homeName}")
+    public ResponseEntity<Home> getHome(@PathVariable(name = "owner-uuid") UUID ownerUuid, @PathVariable String homeName) {
         try {
-            Home home = homeService.getHome(ownerUuid, homeName);
+            Home home = homeUseCase.getHome(ownerUuid, homeName);
             return ResponseEntity.ok(home);
         } catch (HomeNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @GetMapping("/{ownerUuid}/all")
-    public ResponseEntity<List<Home>> getAllHomes(@PathVariable UUID ownerUuid) {
-        return ResponseEntity.ok(homeService.getAll(ownerUuid));
+    @GetMapping("/{owner-uuid}/all")
+    public ResponseEntity<List<Home>> getAllHomesOfPlayer(@PathVariable(name = "owner-uuid") UUID ownerUuid) {
+        return ResponseEntity.ok(homeUseCase.getAllOfPlayer(ownerUuid));
+    }
+
+    @DeleteMapping("/{owner-uuid}/{homeName}")
+    public ResponseEntity<Void> deleteHome(@PathVariable(name = "owner-uuid") UUID ownerUuid, @PathVariable String homeName) {
+        try {
+            homeUseCase.deleteHome(ownerUuid, homeName);
+            return ResponseEntity.ok().build();
+        } catch (HomeNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }

@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Entity
@@ -71,10 +72,9 @@ public class MinecraftPlayerEntity {
         this.homes.remove(home);
     }
 
-    public HomeEntity getHomeByName(String name) {
+    public Optional<HomeEntity> getHomeByName(String name) {
         return this.homes.stream()
                 .filter(h -> h.getName().equalsIgnoreCase(name))
-                .findFirst()
-                .orElse(null);
+                .findFirst();
     }
 }
