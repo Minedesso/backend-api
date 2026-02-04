@@ -6,4 +6,8 @@ public class MinecraftPlayerNotFoundException extends Exception {
     public MinecraftPlayerNotFoundException(UUID uuid) {
         super("minecraft player with uuid " + uuid.toString() + " not found!");
     }
+
+    public MinecraftPlayerNotFoundException(String name) {
+        super("minecraft player with name " + name + " not found!");
+    }
 }

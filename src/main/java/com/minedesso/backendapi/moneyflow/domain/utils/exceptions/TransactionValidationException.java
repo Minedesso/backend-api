@@ -1,4 +1,4 @@
-package com.minedesso.backendapi.balance.domain.utils.exceptions;
+package com.minedesso.backendapi.moneyflow.domain.utils.exceptions;
 
 public class TransactionValidationException extends Exception {
     public TransactionValidationException(String message) {

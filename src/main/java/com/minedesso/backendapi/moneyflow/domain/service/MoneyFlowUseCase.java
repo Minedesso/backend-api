@@ -1,0 +1,19 @@
+package com.minedesso.backendapi.moneyflow.domain.service;
+
+import com.minedesso.backendapi.minecraftplayer.domain.utils.exceptions.MinecraftPlayerNotFoundException;
+import com.minedesso.backendapi.moneyflow.domain.dtos.in.SetMoneyFlowBalanceCommand;
+import com.minedesso.backendapi.moneyflow.domain.dtos.in.SetMoneyFlowBalanceOfflineCommand;
+import com.minedesso.backendapi.moneyflow.domain.dtos.in.TransactionCommand;
+import com.minedesso.backendapi.moneyflow.domain.dtos.in.TransactionOfflineCommand;
+import com.minedesso.backendapi.moneyflow.domain.dtos.out.Balance;
+import com.minedesso.backendapi.moneyflow.domain.utils.exceptions.TransactionValidationException;
+
+import java.util.UUID;
+
+public interface MoneyFlowUseCase {
+    void transact(TransactionCommand command) throws TransactionValidationException;
+    void transactWithOfflinePlayer(TransactionOfflineCommand command) throws TransactionValidationException, MinecraftPlayerNotFoundException;
+    void setBalance(SetMoneyFlowBalanceCommand command) throws TransactionValidationException;
+    void setBalanceOfOfflinePlayer(SetMoneyFlowBalanceOfflineCommand command) throws TransactionValidationException, MinecraftPlayerNotFoundException;
+    Balance getMoneyFlowBalance(UUID ownerUuid);
+}

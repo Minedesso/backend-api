@@ -1,6 +1,6 @@
-package com.minedesso.backendapi.balance.persistence;
+package com.minedesso.backendapi.moneyflow.persistence;
 
-import com.minedesso.backendapi.balance.domain.utils.exceptions.TransactionValidationException;
+import com.minedesso.backendapi.moneyflow.domain.utils.exceptions.TransactionValidationException;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "BALANCE")
-public class BalanceEntity {
+@Table(name = "MONEY_FLOW")
+public class MoneyFlowEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,7 +17,7 @@ public class BalanceEntity {
     private double balance;
     private boolean frozen;
 
-    public BalanceEntity(double balance) {
+    public MoneyFlowEntity(double balance) {
         this.balance = balance;
         this.frozen = false;
     }
@@ -37,5 +37,12 @@ public class BalanceEntity {
             throw new TransactionValidationException("balance too little");
         }
         this.balance -= amount;
+    }
+
+    public void setBalance(double amount) throws TransactionValidationException {
+        if (amount < 0) {
+            throw new TransactionValidationException("new balance mustn't be negative");
+        }
+        this.balance = amount;
     }
 }

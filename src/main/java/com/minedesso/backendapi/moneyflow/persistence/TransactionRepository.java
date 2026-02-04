@@ -1,4 +1,4 @@
-package com.minedesso.backendapi.balance.persistence;
+package com.minedesso.backendapi.moneyflow.persistence;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
