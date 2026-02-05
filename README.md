@@ -58,6 +58,10 @@ SwaggerUI / OpenAPI (http://localhost:8080/api/swagger-ui/index.html)
 | GET          | /api/minecraft-player/all    | -                          | List of MinecraftPlayer |
 | GET          | /api/minecraft-player/{uuid} | -                          | MinecraftPlayer         |
 | DELETE       | /api/minecraft-player/{uuid} | -                          | Void                    |
+| POST         | /api/warp                    | WarpSaveCommand            | Void                    |
+| GET          | /api/warp/all                | -                          | List of Warps           |
+| GET          | /api/warp/{name}             | -                          | Warp                    |
+| DELETE       | /api/warp/{name}             | -                          | Void                    |
 
 # 📦 Minecraft Projekt – README
 
