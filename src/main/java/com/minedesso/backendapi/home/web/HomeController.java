@@ -31,8 +31,8 @@ public class HomeController {
         }
     }
 
-    @GetMapping("/{owner-uuid}/{homeName}")
-    public ResponseEntity<Home> getHome(@PathVariable(name = "owner-uuid") UUID ownerUuid, @PathVariable String homeName) {
+    @GetMapping("/{owner-uuid}/{home-name}")
+    public ResponseEntity<Home> getHome(@PathVariable(name = "owner-uuid") UUID ownerUuid, @PathVariable(name = "home-name") String homeName) {
         try {
             Home home = homeUseCase.getHome(ownerUuid, homeName);
             return ResponseEntity.ok(home);
@@ -46,8 +46,8 @@ public class HomeController {
         return ResponseEntity.ok(homeUseCase.getAllOfPlayer(ownerUuid));
     }
 
-    @DeleteMapping("/{owner-uuid}/{homeName}")
-    public ResponseEntity<Void> deleteHome(@PathVariable(name = "owner-uuid") UUID ownerUuid, @PathVariable String homeName) {
+    @DeleteMapping("/{owner-uuid}/{home-name}")
+    public ResponseEntity<Void> deleteHome(@PathVariable(name = "owner-uuid") UUID ownerUuid, @PathVariable(name = "home-name") String homeName) {
         try {
             homeUseCase.deleteHome(ownerUuid, homeName);
             return ResponseEntity.ok().build();
