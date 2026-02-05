@@ -25,7 +25,7 @@ public class MoneyFlowController {
     @PostMapping("/pay")
     public ResponseEntity<Void> transact(@RequestBody TransactionCommand command) {
         try {
-            this.useCase.transact(command);
+            this.useCase.transactWithOnlinePlayer(command);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (TransactionValidationException e) {
             log.debug(e.getMessage());
@@ -50,7 +50,7 @@ public class MoneyFlowController {
     @PostMapping("/money-flow/balance")
     public ResponseEntity<Void> setBalance(@RequestBody SetMoneyFlowBalanceCommand command) {
         try {
-            this.useCase.setBalance(command);
+            this.useCase.setBalanceOfOnlinePlayer(command);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (TransactionValidationException e) {
             log.debug(e.getMessage());

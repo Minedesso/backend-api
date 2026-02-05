@@ -11,9 +11,9 @@ import com.minedesso.backendapi.moneyflow.domain.utils.exceptions.TransactionVal
 import java.util.UUID;
 
 public interface MoneyFlowUseCase {
-    void transact(TransactionCommand command) throws TransactionValidationException;
+    void transactWithOnlinePlayer(TransactionCommand command) throws TransactionValidationException;
     void transactWithOfflinePlayer(TransactionOfflineCommand command) throws TransactionValidationException, MinecraftPlayerNotFoundException;
-    void setBalance(SetMoneyFlowBalanceCommand command) throws TransactionValidationException;
+    void setBalanceOfOnlinePlayer(SetMoneyFlowBalanceCommand command) throws TransactionValidationException;
     void setBalanceOfOfflinePlayer(SetMoneyFlowBalanceOfflineCommand command) throws TransactionValidationException, MinecraftPlayerNotFoundException;
     Balance getMoneyFlowBalance(UUID ownerUuid);
 }

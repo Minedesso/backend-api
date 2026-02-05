@@ -25,7 +25,7 @@ public class MoneyFlowService implements MoneyFlowUseCase {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void transact(TransactionCommand command) throws TransactionValidationException {
+    public void transactWithOnlinePlayer(TransactionCommand command) throws TransactionValidationException {
         command.validate();
 
         UUID senderUuid = command.getSender();
@@ -68,7 +68,7 @@ public class MoneyFlowService implements MoneyFlowUseCase {
     }
 
     @Override
-    public void setBalance(SetMoneyFlowBalanceCommand command) throws TransactionValidationException {
+    public void setBalanceOfOnlinePlayer(SetMoneyFlowBalanceCommand command) throws TransactionValidationException {
         command.validate();
 
         UUID targetUuid = command.getTargetUuid();

@@ -1,9 +1,6 @@
 package com.minedesso.backendapi.moneyflow.domain.utils.validation;
 
-import com.minedesso.backendapi.moneyflow.domain.dtos.in.SetMoneyFlowBalanceCommand;
-import com.minedesso.backendapi.moneyflow.domain.dtos.in.SetMoneyFlowBalanceOfflineCommand;
-import com.minedesso.backendapi.moneyflow.domain.dtos.in.TransactionCommand;
-import com.minedesso.backendapi.moneyflow.domain.dtos.in.TransactionOfflineCommand;
+import com.minedesso.backendapi.moneyflow.domain.dtos.in.*;
 import com.minedesso.backendapi.moneyflow.domain.utils.enums.TransactionSource;
 import com.minedesso.backendapi.moneyflow.domain.utils.enums.TransactionType;
 import com.minedesso.backendapi.moneyflow.domain.utils.exceptions.TransactionValidationException;
@@ -20,50 +17,46 @@ public final class ValidationUtil {
     );
 
     public static void validateSetMoneyFlowBalanceCommand(SetMoneyFlowBalanceCommand command) throws TransactionValidationException {
-        requireNonNull(command, "command");
-        validateTransactionContext(command.getTransactionContext());
-        validateType(command.getTransactionContext(), TransactionType.SET);
-
-        validateAdminUuid(command.getAdminUuid(), command.getTransactionContext());
+        validateSetMoneyFlowBalanceAbstract(command);
         validateUuid(command.getTargetUuid());
-
-        validateAmountGreaterOrEqualZero(command.getNewBalance());
     }
 
     public static void validateSetMoneyFlowBalanceCommand(SetMoneyFlowBalanceOfflineCommand command) throws TransactionValidationException {
+        validateSetMoneyFlowBalanceAbstract(command);
+        validateName(command.getTargetName());
+    }
+
+    public static void validateTransactionCommand(TransactionCommand command) throws TransactionValidationException {
+        validateTransactionAbstract(command);
+
+        validateUuid(command.getReceiver());
+        validateUuidsNotEqual(command.getSender(), command.getReceiver());
+    }
+
+    public static void validateTransactionCommand(TransactionOfflineCommand command, UUID receiverUuid) throws TransactionValidationException {
+        validateTransactionAbstract(command);
+
+        validateUuid(receiverUuid);
+        validateUuidsNotEqual(command.getSender(), receiverUuid);
+    }
+
+    private static void validateSetMoneyFlowBalanceAbstract(AbstractSetMoneyFlowBalanceCommand command) throws TransactionValidationException {
         requireNonNull(command, "command");
         validateTransactionContext(command.getTransactionContext());
         validateType(command.getTransactionContext(), TransactionType.SET);
 
         validateAdminUuid(command.getAdminUuid(), command.getTransactionContext());
-        validateName(command.getTargetName());
 
         validateAmountGreaterOrEqualZero(command.getNewBalance());
     }
 
-    public static void validateTransactionCommand(TransactionCommand command) throws TransactionValidationException {
-        requireNonNull(command, "transaction-command");
+    private static void validateTransactionAbstract(AbstractTransactionCommand command) throws TransactionValidationException {
+        requireNonNull(command, "command");
         validateTransactionContext(command.getContext());
         validateType(command.getContext(), TransactionType.PAY);
         validateSourceMustBePlayer(command.getContext());
 
-        validateUuid(command.getReceiver());
         validateUuid(command.getSender());
-        validateUuidsNotEqual(command.getSender(), command.getReceiver());
-
-        validateAmountGreaterThanZero(command.getAmount());
-    }
-
-    public static void validateTransactionCommand(TransactionOfflineCommand command, UUID receiverUuid) throws TransactionValidationException {
-        requireNonNull(command, "transaction-offline-command");
-        validateTransactionContext(command.getContext());
-        validateType(command.getContext(), TransactionType.PAY);
-        validateSourceMustBePlayer(command.getContext());
-
-        validateUuid(receiverUuid);
-        validateUuid(command.getSender());
-        validateUuidsNotEqual(command.getSender(), receiverUuid);
-
         validateAmountGreaterThanZero(command.getAmount());
     }
 
