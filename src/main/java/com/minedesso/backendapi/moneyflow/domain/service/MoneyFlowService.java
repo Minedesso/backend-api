@@ -5,7 +5,7 @@ import com.minedesso.backendapi.minecraftplayer.persistence.MinecraftPlayerEntit
 import com.minedesso.backendapi.minecraftplayer.persistence.MinecraftPlayerRepository;
 import com.minedesso.backendapi.moneyflow.domain.dtos.in.SetMoneyFlowBalanceCommand;
 import com.minedesso.backendapi.moneyflow.domain.dtos.in.SetMoneyFlowBalanceOfflineCommand;
-import com.minedesso.backendapi.moneyflow.domain.dtos.in.TransactionCommand;
+import com.minedesso.backendapi.moneyflow.domain.dtos.in.TransactionOnlineCommand;
 import com.minedesso.backendapi.moneyflow.domain.dtos.in.TransactionOfflineCommand;
 import com.minedesso.backendapi.moneyflow.domain.dtos.out.Balance;
 import com.minedesso.backendapi.moneyflow.domain.utils.exceptions.TransactionValidationException;
@@ -25,7 +25,7 @@ public class MoneyFlowService implements MoneyFlowUseCase {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void transactWithOnlinePlayer(TransactionCommand command) throws TransactionValidationException {
+    public void transactWithOnlinePlayer(TransactionOnlineCommand command) throws TransactionValidationException {
         command.validate();
 
         UUID senderUuid = command.getSender();

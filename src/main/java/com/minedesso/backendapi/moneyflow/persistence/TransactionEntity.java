@@ -34,7 +34,7 @@ public class TransactionEntity {
     @CreationTimestamp
     private LocalDateTime transactionTime;
 
-    public TransactionEntity(TransactionCommand command) {
+    public TransactionEntity(TransactionOnlineCommand command) {
         mapFromAbstractTransaction(command, command.getReceiver());
     }
 

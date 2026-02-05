@@ -1,7 +1,7 @@
 package com.minedesso.backendapi.moneyflow.domain.dtos.in;
 
 import com.minedesso.backendapi.moneyflow.domain.utils.exceptions.TransactionValidationException;
-import com.minedesso.backendapi.moneyflow.domain.utils.validation.ValidationUtil;
+import com.minedesso.backendapi.moneyflow.domain.utils.validation.MoneyFlowValidationUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,6 +13,6 @@ public class TransactionOfflineCommand extends AbstractTransactionCommand {
     private String receiverName;
 
     public void validate(UUID receiverUuid) throws TransactionValidationException {
-        ValidationUtil.validateTransactionCommand(this, receiverUuid);
+        MoneyFlowValidationUtils.validateTransactionCommand(this, receiverUuid);
     }
 }

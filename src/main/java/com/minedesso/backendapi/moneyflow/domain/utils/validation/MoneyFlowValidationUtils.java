@@ -9,7 +9,7 @@ import com.minedesso.backendapi.moneyflow.domain.utils.wrappers.TransactionConte
 import java.util.EnumSet;
 import java.util.UUID;
 
-public final class ValidationUtil {
+public final class MoneyFlowValidationUtils {
 
     private static final EnumSet<TransactionSource> SOURCES_REQUIRING_PLAYER = EnumSet.of(
             TransactionSource.ADMIN_COMMAND,
@@ -26,7 +26,7 @@ public final class ValidationUtil {
         validateName(command.getTargetName());
     }
 
-    public static void validateTransactionCommand(TransactionCommand command) throws TransactionValidationException {
+    public static void validateTransactionCommand(TransactionOnlineCommand command) throws TransactionValidationException {
         validateTransactionAbstract(command);
 
         validateUuid(command.getReceiver());

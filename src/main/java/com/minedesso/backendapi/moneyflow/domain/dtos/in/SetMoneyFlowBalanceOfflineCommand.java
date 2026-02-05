@@ -1,7 +1,7 @@
 package com.minedesso.backendapi.moneyflow.domain.dtos.in;
 
 import com.minedesso.backendapi.moneyflow.domain.utils.exceptions.TransactionValidationException;
-import com.minedesso.backendapi.moneyflow.domain.utils.validation.ValidationUtil;
+import com.minedesso.backendapi.moneyflow.domain.utils.validation.MoneyFlowValidationUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,6 +11,6 @@ public class SetMoneyFlowBalanceOfflineCommand extends AbstractSetMoneyFlowBalan
     private String targetName;
 
     public void validate() throws TransactionValidationException {
-        ValidationUtil.validateSetMoneyFlowBalanceCommand(this);
+        MoneyFlowValidationUtils.validateSetMoneyFlowBalanceCommand(this);
     }
 }

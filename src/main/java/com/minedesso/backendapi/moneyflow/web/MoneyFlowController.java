@@ -3,7 +3,7 @@ package com.minedesso.backendapi.moneyflow.web;
 import com.minedesso.backendapi.minecraftplayer.domain.utils.exceptions.MinecraftPlayerNotFoundException;
 import com.minedesso.backendapi.moneyflow.domain.dtos.in.SetMoneyFlowBalanceCommand;
 import com.minedesso.backendapi.moneyflow.domain.dtos.in.SetMoneyFlowBalanceOfflineCommand;
-import com.minedesso.backendapi.moneyflow.domain.dtos.in.TransactionCommand;
+import com.minedesso.backendapi.moneyflow.domain.dtos.in.TransactionOnlineCommand;
 import com.minedesso.backendapi.moneyflow.domain.dtos.in.TransactionOfflineCommand;
 import com.minedesso.backendapi.moneyflow.domain.dtos.out.Balance;
 import com.minedesso.backendapi.moneyflow.domain.service.MoneyFlowUseCase;
@@ -23,7 +23,7 @@ public class MoneyFlowController {
     private final MoneyFlowUseCase useCase;
 
     @PostMapping("/pay")
-    public ResponseEntity<Void> transact(@RequestBody TransactionCommand command) {
+    public ResponseEntity<Void> transactWithOnlinePlayer(@RequestBody TransactionOnlineCommand command) {
         try {
             this.useCase.transactWithOnlinePlayer(command);
             return new ResponseEntity<>(HttpStatus.OK);
