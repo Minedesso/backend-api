@@ -16,7 +16,7 @@ public final class MoneyFlowValidationUtils {
             TransactionSource.PLAYER
     );
 
-    public static void validateSetMoneyFlowBalanceCommand(SetMoneyFlowBalanceCommand command) throws TransactionValidationException {
+    public static void validateSetMoneyFlowBalanceCommand(SetMoneyFlowBalanceOnlineCommand command) throws TransactionValidationException {
         validateSetMoneyFlowBalanceAbstract(command);
         validateUuid(command.getTargetUuid());
     }

@@ -3,7 +3,7 @@ package com.minedesso.backendapi.moneyflow.domain.service;
 import com.minedesso.backendapi.minecraftplayer.domain.utils.exceptions.MinecraftPlayerNotFoundException;
 import com.minedesso.backendapi.minecraftplayer.persistence.MinecraftPlayerEntity;
 import com.minedesso.backendapi.minecraftplayer.persistence.MinecraftPlayerRepository;
-import com.minedesso.backendapi.moneyflow.domain.dtos.in.SetMoneyFlowBalanceCommand;
+import com.minedesso.backendapi.moneyflow.domain.dtos.in.SetMoneyFlowBalanceOnlineCommand;
 import com.minedesso.backendapi.moneyflow.domain.dtos.in.SetMoneyFlowBalanceOfflineCommand;
 import com.minedesso.backendapi.moneyflow.domain.dtos.in.TransactionOnlineCommand;
 import com.minedesso.backendapi.moneyflow.domain.dtos.in.TransactionOfflineCommand;
@@ -68,7 +68,7 @@ public class MoneyFlowService implements MoneyFlowUseCase {
     }
 
     @Override
-    public void setBalanceOfOnlinePlayer(SetMoneyFlowBalanceCommand command) throws TransactionValidationException {
+    public void setBalanceOfOnlinePlayer(SetMoneyFlowBalanceOnlineCommand command) throws TransactionValidationException {
         command.validate();
 
         UUID targetUuid = command.getTargetUuid();

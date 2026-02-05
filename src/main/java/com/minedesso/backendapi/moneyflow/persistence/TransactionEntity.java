@@ -42,7 +42,7 @@ public class TransactionEntity {
         mapFromAbstractTransaction(command, receiverUuid);
     }
 
-    public TransactionEntity(SetMoneyFlowBalanceCommand command) {
+    public TransactionEntity(SetMoneyFlowBalanceOnlineCommand command) {
         mapFromAbstractSetBalance(command, command.getTargetUuid());
     }
 

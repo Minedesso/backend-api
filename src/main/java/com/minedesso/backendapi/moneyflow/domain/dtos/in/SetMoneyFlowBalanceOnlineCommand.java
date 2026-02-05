@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class SetMoneyFlowBalanceCommand extends AbstractSetMoneyFlowBalanceCommand {
+public class SetMoneyFlowBalanceOnlineCommand extends AbstractSetMoneyFlowBalanceCommand {
     private UUID targetUuid;
 
     public void validate() throws TransactionValidationException {
