@@ -1,5 +1,6 @@
 package com.minedesso.backendapi.minecraftplayer.persistence;
 
+import com.minedesso.backendapi.home.persistence.HomeEntity;
 import com.minedesso.backendapi.balance.domain.utils.exceptions.TransactionValidationException;
 import com.minedesso.backendapi.balance.persistence.BalanceEntity;
 import com.minedesso.backendapi.minecraftplayer.domain.dtos.in.MinecraftPlayerSaveCommand;
@@ -8,6 +9,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Entity
@@ -23,6 +27,10 @@ public class MinecraftPlayerEntity {
     private LocalDateTime lastLoginDate;
     private boolean online;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_uuid")
+    private List<HomeEntity> homes;
+
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "BALANCE_ID")
     private BalanceEntity balance;
@@ -31,6 +39,7 @@ public class MinecraftPlayerEntity {
         this.setAttributes(command);
         this.firstLoginDate = LocalDateTime.now();
         this.lastLoginDate = LocalDateTime.now();
+        this.homes = new ArrayList<>();
         this.balance = new BalanceEntity(startBalance);
     }
 
@@ -53,5 +62,19 @@ public class MinecraftPlayerEntity {
 
     public void decreaseBalance(double amount) throws TransactionValidationException {
         this.balance.decrease(amount);
+    }
+
+    public void addHome(HomeEntity home) {
+        this.homes.add(home);
+    }
+
+    public void removeHome(HomeEntity home) {
+        this.homes.remove(home);
+    }
+
+    public Optional<HomeEntity> getHomeByName(String name) {
+        return this.homes.stream()
+                .filter(h -> h.getName().equalsIgnoreCase(name))
+                .findFirst();
     }
 }
