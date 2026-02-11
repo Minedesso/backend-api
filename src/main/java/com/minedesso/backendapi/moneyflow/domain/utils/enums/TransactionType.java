@@ -1,4 +1,4 @@
-package com.minedesso.backendapi.balance.domain.utils.enums;
+package com.minedesso.backendapi.moneyflow.domain.utils.enums;
 
 public enum TransactionType {
     PAY,

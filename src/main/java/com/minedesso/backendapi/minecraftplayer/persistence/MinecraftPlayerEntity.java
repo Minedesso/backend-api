@@ -1,9 +1,9 @@
 package com.minedesso.backendapi.minecraftplayer.persistence;
 
 import com.minedesso.backendapi.home.persistence.HomeEntity;
-import com.minedesso.backendapi.balance.domain.utils.exceptions.TransactionValidationException;
-import com.minedesso.backendapi.balance.persistence.BalanceEntity;
 import com.minedesso.backendapi.minecraftplayer.domain.dtos.in.MinecraftPlayerSaveCommand;
+import com.minedesso.backendapi.moneyflow.domain.utils.exceptions.TransactionValidationException;
+import com.minedesso.backendapi.moneyflow.persistence.MoneyFlowEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,15 +32,15 @@ public class MinecraftPlayerEntity {
     private List<HomeEntity> homes;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "BALANCE_ID")
-    private BalanceEntity balance;
+    @JoinColumn(name = "MONEY_FLOW_ID")
+    private MoneyFlowEntity moneyFlow;
 
-    public MinecraftPlayerEntity(MinecraftPlayerSaveCommand command, double startBalance) {
+    public MinecraftPlayerEntity(MinecraftPlayerSaveCommand command, double startMoneyFlowBalance) {
         this.setAttributes(command);
         this.firstLoginDate = LocalDateTime.now();
         this.lastLoginDate = LocalDateTime.now();
+        this.moneyFlow = new MoneyFlowEntity(startMoneyFlowBalance);
         this.homes = new ArrayList<>();
-        this.balance = new BalanceEntity(startBalance);
     }
 
     public void update(MinecraftPlayerSaveCommand command) {
@@ -56,12 +56,16 @@ public class MinecraftPlayerEntity {
         this.online = command.isOnline();
     }
 
-    public void increaseBalance(double amount) throws TransactionValidationException {
-        this.balance.increase(amount);
+    public void increaseMoneyFlowBalance(double amount) throws TransactionValidationException {
+        this.moneyFlow.increase(amount);
     }
 
-    public void decreaseBalance(double amount) throws TransactionValidationException {
-        this.balance.decrease(amount);
+    public void decreaseMoneyFlowBalance(double amount) throws TransactionValidationException {
+        this.moneyFlow.decrease(amount);
+    }
+
+    public void setMoneyFlowBalance(double amount) throws TransactionValidationException {
+        this.moneyFlow.setBalance(amount);
     }
 
     public void addHome(HomeEntity home) {

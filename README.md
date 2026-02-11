@@ -52,16 +52,21 @@ SwaggerUI / OpenAPI (http://localhost:8080/api/swagger-ui/index.html)
 
 ### Minecraft Player
 
-| HTTP-Methode | Pfad                         | RequestBody                | ResponseBody            |
-|--------------|------------------------------|----------------------------|-------------------------|
-| POST         | /api/minecraft-player        | MinecraftPlayerSaveCommand | Void                    |
-| GET          | /api/minecraft-player/all    | -                          | List of MinecraftPlayer |
-| GET          | /api/minecraft-player/{uuid} | -                          | MinecraftPlayer         |
-| DELETE       | /api/minecraft-player/{uuid} | -                          | Void                    |
-| POST         | /api/warp                    | WarpSaveCommand            | Void                    |
-| GET          | /api/warp/all                | -                          | List of Warps           |
-| GET          | /api/warp/{name}             | -                          | Warp                    |
-| DELETE       | /api/warp/{name}             | -                          | Void                    |
+| HTTP-Methode | Pfad                            | RequestBody                       | ResponseBody                            |
+|--------------|---------------------------------|-----------------------------------|-----------------------------------------|
+| POST         | /api/minecraft-player           | MinecraftPlayerSaveCommand        | Void                                    |
+| GET          | /api/minecraft-player/all       | -                                 | List of MinecraftPlayer                 |
+| GET          | /api/minecraft-player/{uuid}    | -                                 | MinecraftPlayer                         |
+| DELETE       | /api/minecraft-player/{uuid}    | -                                 | Void                                    |
+| POST         | /api/pay                        | TransactionCommand                | Void                                    |
+| POST         | /api/pay/offline                | TransactionOfflineCommand         | Void                                    |
+| POST         | /api/money-flow/balance         | SetMoneyFlowBalanceCommand        | Void                                    |
+| POST         | /api/money-flow/balance/offline | SetMoneyFlowBalanceOfflineCommand | Void                                    |
+| GET          | /api/money-flow/balance/{uuid}  | -                                 | Balance in CityBuild of MinecraftPlayer |
+| POST         | /api/warp                       | WarpSaveCommand                   | Void                                    |
+| GET          | /api/warp/all                   | -                                 | List of Warps                           |
+| GET          | /api/warp/{name}                | -                                 | Warp                                    |
+| DELETE       | /api/warp/{name}                | -                                 | Void                                    |
 
 # 📦 Minecraft Projekt – README
 
