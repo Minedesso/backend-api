@@ -33,7 +33,7 @@ public class WarpController {
     @GetMapping("/{name}")
     public ResponseEntity<Warp> getByName(@PathVariable String name) {
         try {
-            Warp warp = warpUseCase.getByName(name);
+            Warp warp = warpUseCase.getByName(name.toLowerCase());
             return ResponseEntity.ok(warp);
         } catch (WarpNotFoundException e) {
             log.debug(e.getMessage(), e);
@@ -44,7 +44,7 @@ public class WarpController {
     @DeleteMapping("/{name}")
     public ResponseEntity<Void> deleteByName(@PathVariable String name) {
         try {
-            warpUseCase.deleteByName(name);
+            warpUseCase.deleteByName(name.toLowerCase());
             return ResponseEntity.ok().build();
         } catch (WarpNotFoundException e) {
             log.debug(e.getMessage(), e);

@@ -15,4 +15,8 @@ public class WarpSaveCommand {
     private final double z;
     private final float yaw;
     private final float pitch;
+
+    public String getName() {
+        return this.name.toLowerCase();
+    }
 }
