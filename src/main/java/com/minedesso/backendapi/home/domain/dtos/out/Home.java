@@ -2,8 +2,10 @@ package com.minedesso.backendapi.home.domain.dtos.out;
 
 import com.minedesso.backendapi.home.persistence.HomeEntity;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class Home {
     private String name;
 
