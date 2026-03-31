@@ -35,8 +35,7 @@ public class HomeControllerIT extends BaseIT {
                 PATH,
                 HttpMethod.POST,
                 entity,
-                new ParameterizedTypeReference<>() {
-                }
+                Void.class
         );
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -60,8 +59,7 @@ public class HomeControllerIT extends BaseIT {
                 PATH,
                 HttpMethod.POST,
                 entity,
-                new ParameterizedTypeReference<>() {
-                }
+                Void.class
         );
 
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
@@ -138,8 +136,7 @@ public class HomeControllerIT extends BaseIT {
                 PATH + "/" + uuid + "/World 1",
                 HttpMethod.DELETE,
                 null,
-                new ParameterizedTypeReference<>() {
-                }
+                Void.class
         );
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -159,8 +156,7 @@ public class HomeControllerIT extends BaseIT {
                 PATH + "/" + uuid + "/World 2",
                 HttpMethod.DELETE,
                 null,
-                new ParameterizedTypeReference<>() {
-                }
+                Void.class
         );
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
