@@ -9,4 +9,6 @@ import java.util.UUID;
 @Repository
 public interface MinecraftPlayerRepository extends JpaRepository<MinecraftPlayerEntity, UUID> {
     Optional<MinecraftPlayerEntity> findByName(String name);
+
+    Optional<MinecraftPlayerEntity> findByNameIgnoreCase(String targetName);
 }

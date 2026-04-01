@@ -20,7 +20,7 @@ public class MinecraftPlayerService implements MinecraftPlayerUseCase {
     private final SettingsRepository settingsRepository;
 
     @Override
-    public void save(MinecraftPlayerSaveCommand command) {
+    public MinecraftPlayerEntity save(MinecraftPlayerSaveCommand command) {
         Optional<MinecraftPlayerEntity> minecraftPlayerEntityOpt = this.minecraftPlayerRepository
                 .findById(command.getUuid());
 
@@ -32,7 +32,7 @@ public class MinecraftPlayerService implements MinecraftPlayerUseCase {
             minecraftPlayerEntity = new MinecraftPlayerEntity(command, this.settingsRepository.findStartBalance());
         }
 
-        this.minecraftPlayerRepository.save(minecraftPlayerEntity);
+        return this.minecraftPlayerRepository.save(minecraftPlayerEntity);
     }
 
     @Override
