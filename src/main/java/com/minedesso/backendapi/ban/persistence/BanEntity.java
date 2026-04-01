@@ -46,7 +46,7 @@ public class BanEntity {
      */
     private LocalDateTime calculateExpiresAt(LocalDateTime bannedAt, String duration) throws IllegalArgumentException {
         if (duration.equalsIgnoreCase("perm")) {
-            return LocalDateTime.MAX; // Represents a permanent ban
+            return null; // Represents a permanent ban
         }
 
         char timeUnit = duration.charAt(duration.length() - 1);
