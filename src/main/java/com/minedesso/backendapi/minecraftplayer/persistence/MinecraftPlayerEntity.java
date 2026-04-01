@@ -27,7 +27,7 @@ public class MinecraftPlayerEntity {
     private LocalDateTime lastLoginDate;
     private boolean online;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "owner_uuid")
     private List<HomeEntity> homes;
 
