@@ -40,28 +40,16 @@ public class BanService implements BanUseCase {
         Optional<ReasonEntity> reasonEntityOptional = reasonRepository.findById(banSaveCommand.getReasonId());
         if (reasonEntityOptional.isEmpty()) throw new ReasonNotFoundException(banSaveCommand.getReasonId());
 
-        Optional<MinecraftPlayerEntity> targetPlayerOptional = minecraftPlayerRepository
-                .findByNameIgnoreCase(banSaveCommand.getTargetName());
-
-        MinecraftPlayerEntity targetPlayer;
-        if (targetPlayerOptional.isEmpty()) {
-            targetPlayer = handlePlayerNotFound(banSaveCommand.getTargetName());
-        } else {
-            targetPlayer = targetPlayerOptional.get();
-        }
-
-        MinecraftPlayerEntity senderPlayer = minecraftPlayerRepository.findById(banSaveCommand.getBannedBy())
-                .orElseThrow(() -> new IllegalStateException("Sender player not found"));
+        MinecraftPlayerEntity targetPlayer = getTargetPlayer(banSaveCommand);
+        MinecraftPlayerEntity senderPlayer = getBannedBy(banSaveCommand);
 
         if (isPlayerBanned(targetPlayer))
             throw new PlayerAlreadyBannedException(banSaveCommand.getTargetName());
-
         BanEntity banEntity = new BanEntity(banSaveCommand, reasonEntityOptional.get());
 
         banEntity.setBannedBy(senderPlayer);
         targetPlayer.addBan(banEntity);
         minecraftPlayerRepository.save(targetPlayer);
-
         return getBanDetails(targetPlayer);
     }
 
@@ -137,5 +125,22 @@ public class BanService implements BanUseCase {
         );
 
         return minecraftPlayerService.save(minecraftPlayerSaveCommand);
+    }
+
+    private MinecraftPlayerEntity getBannedBy(BanSaveCommand banSaveCommand) {
+        if(banSaveCommand.getBannedBy() == null) return null;
+        return minecraftPlayerRepository.findById(banSaveCommand.getBannedBy())
+                .orElseThrow(() -> new IllegalStateException("Sender not found"));
+    }
+
+    private MinecraftPlayerEntity getTargetPlayer(BanSaveCommand banSaveCommand) throws PlayerUuidNotFoundException {
+        Optional<MinecraftPlayerEntity> targetPlayerOptional = minecraftPlayerRepository
+                .findByNameIgnoreCase(banSaveCommand.getTargetName());
+
+        if (targetPlayerOptional.isEmpty()) {
+            return handlePlayerNotFound(banSaveCommand.getTargetName());
+        } else {
+            return targetPlayerOptional.get();
+        }
     }
 }
