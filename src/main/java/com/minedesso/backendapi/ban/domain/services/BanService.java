@@ -110,7 +110,7 @@ public class BanService implements BanUseCase {
             if(mojangPlayer == null) return null;
             return mojangPlayer.toUUID();
         } catch (Exception e) {
-            throw new IllegalStateException("Failed to lookup player uuid from Mojang API", e);
+            return null;
         }
     }
 

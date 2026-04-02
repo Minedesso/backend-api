@@ -2,10 +2,12 @@ package com.minedesso.backendapi.ban.domain.dtos.out;
 
 import com.minedesso.backendapi.ban.persistence.BanEntity;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
+@NoArgsConstructor
 public class Ban {
 
     private LocalDateTime bannedAt;

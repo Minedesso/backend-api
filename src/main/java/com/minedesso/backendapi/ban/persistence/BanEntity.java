@@ -22,11 +22,11 @@ public class BanEntity {
     private LocalDateTime expiresAt;
     private boolean isActive;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "reason_id")
     private ReasonEntity reason;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "banned_by_uuid")
     private MinecraftPlayerEntity bannedBy;
 

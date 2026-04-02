@@ -36,12 +36,12 @@ public class MinecraftPlayerEntity {
     @JoinColumn(name = "MONEY_FLOW_ID")
     private MoneyFlowEntity moneyFlow;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "target_uuid")
     private List<BanEntity> bans;
 
 
-    @OneToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.DETACH, orphanRemoval = true)
     @JoinColumn(name = "banned_by_uuid")
     private List<BanEntity> banned;
 
