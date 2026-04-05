@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "ban")
+@Table(name = "BAN")
 public class BanEntity {
 
     @Id
@@ -30,11 +30,12 @@ public class BanEntity {
     @JoinColumn(name = "banned_by_uuid")
     private MinecraftPlayerEntity bannedBy;
 
-    public BanEntity(BanSaveCommand command, ReasonEntity reason) {
+    public BanEntity(BanSaveCommand command, ReasonEntity reason,  MinecraftPlayerEntity bannedBy) {
         this.createdAt = command.getBannedAt();
         this.expiresAt = calculateExpiresAt(command.getBannedAt(), command.getDuration());
         this.isActive = true;
         this.reason = reason;
+        this.bannedBy = bannedBy;
     }
 
     /**

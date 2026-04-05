@@ -51,8 +51,8 @@ public class BanControllerIT extends BaseIT {
         assertTrue(targetEntityOptional.isPresent());
         assertTrue(senderEntityOptional.isPresent());
 
-        assertFalse(targetEntityOptional.get().getBans().isEmpty());
-        assertFalse(senderEntityOptional.get().getBanned().isEmpty());
+        assertFalse(targetEntityOptional.get().getReceivedBans().isEmpty());
+        assertFalse(senderEntityOptional.get().getAssignedBans().isEmpty());
 
         assertTrue(ban.getExpiresAt().isAfter(ban.getBannedAt()));
         assertEquals("Hacking", ban.getReason());
@@ -63,7 +63,7 @@ public class BanControllerIT extends BaseIT {
     @Sql(scripts = "/sql/minecraftplayer/createMinecraftPlayers.sql")
     @Sql(scripts = "/sql/ban/createReasons.sql")
     @Sql(scripts = "/sql/ban/createBans.sql")
-    void createBan_returnsConflict_playerAlreadyBanned() {
+    void createBan_playerAlreadyBanned_returnsConflict() {
         BanSaveCommand banSaveCommand = BanTestHelper.createBanSaveCommand();
 
         HttpEntity<BanSaveCommand> entity = new HttpEntity<>(banSaveCommand);
@@ -80,7 +80,7 @@ public class BanControllerIT extends BaseIT {
     @Test
     @Sql(scripts = "/sql/minecraftplayer/createMinecraftPlayers.sql")
     @Sql(scripts = "/sql/ban/createReasons.sql")
-    void createBan_returnsConflict_reasonNotFound() {
+    void createBan_reasonNotFound_returnsConflict() {
         BanSaveCommand banSaveCommand = BanTestHelper.createBanSaveCommandUnvalidReasonId();
 
         HttpEntity<BanSaveCommand> entity = new HttpEntity<>(banSaveCommand);
@@ -97,7 +97,7 @@ public class BanControllerIT extends BaseIT {
     @Test
     @Sql(scripts = "/sql/minecraftplayer/createMinecraftPlayers.sql")
     @Sql(scripts = "/sql/ban/createReasons.sql")
-    void createBan_returnsConflict_targetUuidNotFound() {
+    void createBan_targetUuidNotFound_returnsConflict() {
         BanSaveCommand banSaveCommand = BanTestHelper.createBanSaveCommandUnvalidTarget();
 
         HttpEntity<BanSaveCommand> entity = new HttpEntity<>(banSaveCommand);

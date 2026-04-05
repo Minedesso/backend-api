@@ -38,12 +38,12 @@ public class MinecraftPlayerEntity {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "target_uuid")
-    private List<BanEntity> bans;
+    private List<BanEntity> receivedBans;
 
 
     @OneToMany(cascade = CascadeType.DETACH, orphanRemoval = true)
     @JoinColumn(name = "banned_by_uuid")
-    private List<BanEntity> banned;
+    private List<BanEntity> assignedBans;
 
     public MinecraftPlayerEntity(MinecraftPlayerSaveCommand command, double startMoneyFlowBalance) {
         this.setAttributes(command);
@@ -53,8 +53,8 @@ public class MinecraftPlayerEntity {
         }
         this.moneyFlow = new MoneyFlowEntity(startMoneyFlowBalance);
         this.homes = new ArrayList<>();
-        this.bans = new ArrayList<>();
-        this.banned = new ArrayList<>();
+        this.receivedBans = new ArrayList<>();
+        this.assignedBans = new ArrayList<>();
     }
 
     public void update(MinecraftPlayerSaveCommand command) {
@@ -96,8 +96,12 @@ public class MinecraftPlayerEntity {
                 .findFirst();
     }
 
-    public void addBan(BanEntity ban) {
-        this.bans.add(ban);
+    public void addReceivedBan(BanEntity ban) {
+        this.receivedBans.add(ban);
+    }
+
+    public boolean isBanned() {
+        return this.receivedBans.stream().anyMatch(BanEntity::isActive);
     }
 
 }

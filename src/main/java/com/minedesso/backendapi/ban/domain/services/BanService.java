@@ -1,8 +1,8 @@
 package com.minedesso.backendapi.ban.domain.services;
 
 import com.minedesso.backendapi.ban.domain.dtos.in.BanSaveCommand;
-import com.minedesso.backendapi.ban.domain.dtos.out.Ban;
 import com.minedesso.backendapi.ban.domain.dtos.in.MojangPlayer;
+import com.minedesso.backendapi.ban.domain.dtos.out.Ban;
 import com.minedesso.backendapi.ban.domain.util.exceptions.PlayerAlreadyBannedException;
 import com.minedesso.backendapi.ban.domain.util.exceptions.PlayerUuidNotFoundException;
 import com.minedesso.backendapi.ban.domain.util.exceptions.ReasonNotFoundException;
@@ -12,10 +12,10 @@ import com.minedesso.backendapi.ban.persistence.ReasonEntity;
 import com.minedesso.backendapi.ban.persistence.ReasonRepository;
 import com.minedesso.backendapi.home.domain.utils.exceptions.ActiveBanNotFoundException;
 import com.minedesso.backendapi.minecraftplayer.domain.dtos.in.MinecraftPlayerSaveCommand;
-import com.minedesso.backendapi.minecraftplayer.domain.services.MinecraftPlayerService;
 import com.minedesso.backendapi.minecraftplayer.domain.utils.exceptions.MinecraftPlayerNotFoundException;
 import com.minedesso.backendapi.minecraftplayer.persistence.MinecraftPlayerEntity;
 import com.minedesso.backendapi.minecraftplayer.persistence.MinecraftPlayerRepository;
+import com.minedesso.backendapi.settings.persistence.SettingsRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,27 +28,27 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class BanService implements BanUseCase {
+
     private final ReasonRepository reasonRepository;
     private final MinecraftPlayerRepository minecraftPlayerRepository;
-    private final MinecraftPlayerService minecraftPlayerService;
+    private final SettingsRepository settingsRepository;
     private final MojangApiPropertyConfig mojangApiPropertyConfig;
 
     @Override
     @Transactional(rollbackOn = Exception.class)
     public Ban saveBan(BanSaveCommand banSaveCommand)
             throws ReasonNotFoundException, PlayerAlreadyBannedException, ActiveBanNotFoundException, PlayerUuidNotFoundException {
-        Optional<ReasonEntity> reasonEntityOptional = reasonRepository.findById(banSaveCommand.getReasonId());
-        if (reasonEntityOptional.isEmpty()) throw new ReasonNotFoundException(banSaveCommand.getReasonId());
+        ReasonEntity reasonEntity = reasonRepository.findById(banSaveCommand.getReasonId())
+                .orElseThrow(() -> new ReasonNotFoundException(banSaveCommand.getReasonId()));
 
         MinecraftPlayerEntity targetPlayer = getTargetPlayer(banSaveCommand);
         MinecraftPlayerEntity senderPlayer = getBannedBy(banSaveCommand);
 
-        if (isPlayerBanned(targetPlayer))
+        if (targetPlayer.isBanned())
             throw new PlayerAlreadyBannedException(banSaveCommand.getTargetName());
-        BanEntity banEntity = new BanEntity(banSaveCommand, reasonEntityOptional.get());
+        BanEntity banEntity = new BanEntity(banSaveCommand, reasonEntity, senderPlayer);
 
-        banEntity.setBannedBy(senderPlayer);
-        targetPlayer.addBan(banEntity);
+        targetPlayer.addReceivedBan(banEntity);
         minecraftPlayerRepository.save(targetPlayer);
         return getBanDetails(targetPlayer);
     }
@@ -66,7 +66,7 @@ public class BanService implements BanUseCase {
         MinecraftPlayerEntity playerEntity = minecraftPlayerRepository.findById(uuid)
                 .orElseThrow(() -> new IllegalStateException("Player not found"));
 
-        return isPlayerBanned(playerEntity);
+        return playerEntity.isBanned();
     }
 
     @Override
@@ -74,18 +74,11 @@ public class BanService implements BanUseCase {
         MinecraftPlayerEntity playerEntity = minecraftPlayerRepository.findByName(playerName)
                 .orElseThrow(() -> new MinecraftPlayerNotFoundException(playerName));
 
-        return isPlayerBanned(playerEntity);
-    }
-
-    private boolean isPlayerBanned(MinecraftPlayerEntity player) {
-        List<BanEntity> activeBans = player.getBans().stream()
-                .filter(BanEntity::isActive)
-                .toList();
-        return !activeBans.isEmpty();
+        return playerEntity.isBanned();
     }
 
     private Ban getBanDetails(MinecraftPlayerEntity playerEntity) throws ActiveBanNotFoundException {
-        List<BanEntity> activeBans = playerEntity.getBans().stream()
+        List<BanEntity> activeBans = playerEntity.getReceivedBans().stream()
                 .filter(BanEntity::isActive)
                 .toList();
 
@@ -95,7 +88,7 @@ public class BanService implements BanUseCase {
         return new Ban(banEntity);
     }
 
-    private UUID getPlayerUUIDFromMojangAPI(String playerName) {
+    private Optional<UUID> getPlayerUUIDFromMojangAPI(String playerName) {
         try {
             String url = String.format(mojangApiPropertyConfig.getPlayerUuidUrl(), playerName);
 
@@ -107,16 +100,16 @@ public class BanService implements BanUseCase {
                     .retrieve()
                     .body(MojangPlayer.class);
 
-            if(mojangPlayer == null) return null;
-            return mojangPlayer.toUUID();
+            if(mojangPlayer == null) return Optional.empty();
+            return Optional.of(mojangPlayer.toUUID());
         } catch (Exception e) {
-            return null;
+            return Optional.empty();
         }
     }
 
     private MinecraftPlayerEntity handlePlayerNotFound(String playerName) throws PlayerUuidNotFoundException {
-        UUID targetUuid = getPlayerUUIDFromMojangAPI(playerName);
-        if (targetUuid == null) throw new PlayerUuidNotFoundException(playerName);
+        UUID targetUuid = getPlayerUUIDFromMojangAPI(playerName)
+                .orElseThrow(() -> new PlayerUuidNotFoundException(playerName));
 
         MinecraftPlayerSaveCommand minecraftPlayerSaveCommand = new MinecraftPlayerSaveCommand(
                 targetUuid,
@@ -124,7 +117,12 @@ public class BanService implements BanUseCase {
                 false
         );
 
-        return minecraftPlayerService.save(minecraftPlayerSaveCommand);
+        MinecraftPlayerEntity createdMinecraftPlayerEntity = new MinecraftPlayerEntity(
+                minecraftPlayerSaveCommand,
+                settingsRepository.findStartBalance()
+        );
+
+        return minecraftPlayerRepository.save(createdMinecraftPlayerEntity);
     }
 
     private MinecraftPlayerEntity getBannedBy(BanSaveCommand banSaveCommand) {
