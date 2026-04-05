@@ -27,6 +27,9 @@ jobs:
           java-version: "21"
           cache: maven
 
-      - name: Run Maven tests
-        run: ./mvnw -B -ntp verify
+      - name: Run unit tests
+        run: ./mvnw -B -ntp test
+
+      - name: Run integration tests
+        run: ./mvnw -B -ntp -DskipTests failsafe:integration-test failsafe:verify
 
