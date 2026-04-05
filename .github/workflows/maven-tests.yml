@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main, develop, master]
+  push:
+    branches: [main, develop, master]
+  schedule:
+    - cron: "0 3 * * 1" # wöchentlich montags 03:00 UTC
+
+jobs:
+  tests:
+    name: Maven Tests
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Run Maven tests
+        run: ./mvnw -B -ntp verify
+
