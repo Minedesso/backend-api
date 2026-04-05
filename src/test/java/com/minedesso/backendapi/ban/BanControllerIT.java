@@ -15,6 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -110,4 +111,143 @@ public class BanControllerIT extends BaseIT {
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
+
+    @Test
+    @Sql(scripts = "/sql/minecraftplayer/createMinecraftPlayers.sql")
+    @Sql(scripts = "/sql/ban/createReasons.sql")
+    @Sql(scripts = "/sql/ban/createBans.sql")
+    void getBanDetails_returnsOk() {
+        UUID uuid = UUID.fromString("a22e9e92-1894-4d63-993c-a09f0e1edc7f");
+
+        ResponseEntity<Ban> response = this.restTemplate.exchange(
+                PATH + "/" + uuid,
+                HttpMethod.GET,
+                null,
+                Ban.class
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        assertTrue(response.hasBody());
+        Ban ban = response.getBody();
+
+        assertNotNull(ban);
+        assertEquals("_ConFace", ban.getBannedBy());
+        assertEquals("Hacking", ban.getReason());
+    }
+
+    @Test
+    @Sql(scripts = "/sql/minecraftplayer/createMinecraftPlayers.sql")
+    void getBanDetails_returnsNotFound() {
+        UUID uuid = UUID.fromString("a22e9e92-1894-4d63-993c-a09f0e1edc7f");
+
+        ResponseEntity<Ban> response = this.restTemplate.exchange(
+                PATH + "/" + uuid,
+                HttpMethod.GET,
+                null,
+                Ban.class
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertFalse(response.hasBody());
+    }
+
+    @Test
+    @Sql(scripts = "/sql/minecraftplayer/createMinecraftPlayers.sql")
+    @Sql(scripts = "/sql/ban/createReasons.sql")
+    @Sql(scripts = "/sql/ban/createBans.sql")
+    void checkActiveBanByUuid_returnsTrue() {
+        UUID uuid = UUID.fromString("a22e9e92-1894-4d63-993c-a09f0e1edc7f");
+
+        ResponseEntity<Boolean> response = this.restTemplate.exchange(
+                PATH + "/check/" + uuid,
+                HttpMethod.GET,
+                null,
+                Boolean.class
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        assertTrue(response.hasBody());
+        assertNotNull(response.getBody());
+        assertTrue(response.getBody());
+    }
+
+    @Test
+    @Sql(scripts = "/sql/minecraftplayer/createMinecraftPlayers.sql")
+    void checkActiveBanByUuid_returnsFalse() {
+        UUID uuid = UUID.fromString("a22e9e92-1894-4d63-993c-a09f0e1edc7f");
+
+        ResponseEntity<Boolean> response = this.restTemplate.exchange(
+                PATH + "/check/" + uuid,
+                HttpMethod.GET,
+                null,
+                Boolean.class
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        assertTrue(response.hasBody());
+        assertNotNull(response.getBody());
+        assertFalse(response.getBody());
+    }
+
+    @Test
+    @Sql(scripts = "/sql/minecraftplayer/createMinecraftPlayers.sql")
+    @Sql(scripts = "/sql/ban/createReasons.sql")
+    @Sql(scripts = "/sql/ban/createBans.sql")
+    void checkActiveBanByName_returnsTrue() {
+        String playerName = "Alessio";
+
+        ResponseEntity<Boolean> response = this.restTemplate.exchange(
+                PATH + "/check?playerName=" + playerName,
+                HttpMethod.GET,
+                null,
+                Boolean.class
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        assertTrue(response.hasBody());
+        assertNotNull(response.getBody());
+        assertTrue(response.getBody());
+    }
+
+    @Test
+    @Sql(scripts = "/sql/minecraftplayer/createMinecraftPlayers.sql")
+    void checkActiveBanByName_returnsFalse() {
+        String playerName = "Alessio";
+
+        ResponseEntity<Boolean> response = this.restTemplate.exchange(
+                PATH + "/check?playerName=" + playerName,
+                HttpMethod.GET,
+                null,
+                Boolean.class
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        assertTrue(response.hasBody());
+        assertNotNull(response.getBody());
+        assertFalse(response.getBody());
+    }
+
+    @Test
+    void checkActiveBanByName_minecraftPlayerDoesNotExist_returnsFalse() {
+        String playerName = ".";
+
+        ResponseEntity<Boolean> response = this.restTemplate.exchange(
+                PATH + "/check?playerName=" + playerName,
+                HttpMethod.GET,
+                null,
+                Boolean.class
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        assertTrue(response.hasBody());
+        assertNotNull(response.getBody());
+        assertFalse(response.getBody());
+    }
+
 }

@@ -45,7 +45,7 @@ public class BanController {
     }
 
     @GetMapping("/check/{uuid}")
-    public ResponseEntity<Boolean> checkBan(@PathVariable UUID uuid) {
+    public ResponseEntity<Boolean> checkActiveBan(@PathVariable UUID uuid) {
         boolean isBanned = banUseCase.checkActiveBan(uuid);
         return ResponseEntity.ok(isBanned);
     }
