@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog
+            https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="162-implement-a-ban-command" author="Aless1x">
+        <insert tableName="settings">
+            <column name="id">10000</column>
+            <column name="start_balance">1000.0</column>
+        </insert>
+
+        <createTable tableName="reason">
+            <column name="reason_id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"
+                             primaryKeyName="pk_reason"
+                             nullable="false"/>
+            </column>
+            <column name="reason" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="ban">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"
+                             primaryKeyName="pk_ban"
+                             nullable="false"/>
+            </column>
+
+            <column name="created_at" type="TIMESTAMP"/>
+            <column name="expires_at" type="TIMESTAMP"/>
+
+            <column name="is_active" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="reason_id" type="BIGINT"/>
+            <column name="banned_by_uuid" type="UUID"/>
+            <column name="target_uuid" type="UUID"/>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="ban"
+                baseColumnNames="reason_id"
+                constraintName="fk_ban_reason"
+                referencedTableName="reason"
+                referencedColumnNames="reason_id"
+                onDelete="SET NULL"/>
+
+        <addForeignKeyConstraint
+                baseTableName="ban"
+                baseColumnNames="banned_by_uuid"
+                constraintName="fk_ban_banned_by"
+                referencedTableName="minecraft_player"
+                referencedColumnNames="uuid"
+                onDelete="SET NULL"/>
+
+        <addForeignKeyConstraint
+                baseTableName="ban"
+                baseColumnNames="target_uuid"
+                constraintName="fk_ban_target"
+                referencedTableName="minecraft_player"
+                referencedColumnNames="uuid"
+                onDelete="CASCADE"/>
+    </changeSet>
+</databaseChangeLog>

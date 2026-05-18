@@ -29,7 +29,7 @@ public class WebSecurityConfig {
         http.cors(cors -> cors.configurationSource(this.corsConfiguration()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> {
-                    request.requestMatchers("/swagger-ui/**", "/api-docs/**").permitAll();
+                    request.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll();
                     request.anyRequest().authenticated();
                 })
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))

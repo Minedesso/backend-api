@@ -1,5 +1,6 @@
 package com.minedesso.backendapi.minecraftplayer.persistence;
 
+import com.minedesso.backendapi.ban.persistence.BanEntity;
 import com.minedesso.backendapi.home.persistence.HomeEntity;
 import com.minedesso.backendapi.minecraftplayer.domain.dtos.in.MinecraftPlayerSaveCommand;
 import com.minedesso.backendapi.moneyflow.domain.utils.exceptions.TransactionValidationException;
@@ -35,12 +36,25 @@ public class MinecraftPlayerEntity {
     @JoinColumn(name = "MONEY_FLOW_ID")
     private MoneyFlowEntity moneyFlow;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "target_uuid")
+    private List<BanEntity> receivedBans;
+
+
+    @OneToMany(cascade = CascadeType.DETACH, orphanRemoval = true)
+    @JoinColumn(name = "banned_by_uuid")
+    private List<BanEntity> assignedBans;
+
     public MinecraftPlayerEntity(MinecraftPlayerSaveCommand command, double startMoneyFlowBalance) {
         this.setAttributes(command);
-        this.firstLoginDate = LocalDateTime.now();
-        this.lastLoginDate = LocalDateTime.now();
+        if (command.isOnline()) {
+            this.firstLoginDate = LocalDateTime.now();
+            this.lastLoginDate = LocalDateTime.now();
+        }
         this.moneyFlow = new MoneyFlowEntity(startMoneyFlowBalance);
         this.homes = new ArrayList<>();
+        this.receivedBans = new ArrayList<>();
+        this.assignedBans = new ArrayList<>();
     }
 
     public void update(MinecraftPlayerSaveCommand command) {
@@ -81,4 +95,13 @@ public class MinecraftPlayerEntity {
                 .filter(h -> h.getName().equalsIgnoreCase(name))
                 .findFirst();
     }
+
+    public void addReceivedBan(BanEntity ban) {
+        this.receivedBans.add(ban);
+    }
+
+    public boolean isBanned() {
+        return this.receivedBans.stream().anyMatch(BanEntity::isActive);
+    }
+
 }
