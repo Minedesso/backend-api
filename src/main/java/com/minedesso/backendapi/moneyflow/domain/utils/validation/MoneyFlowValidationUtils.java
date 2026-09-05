@@ -6,12 +6,12 @@ import com.minedesso.backendapi.moneyflow.domain.utils.enums.TransactionType;
 import com.minedesso.backendapi.moneyflow.domain.utils.exceptions.TransactionValidationException;
 import com.minedesso.backendapi.moneyflow.domain.utils.wrappers.TransactionContext;
 
-import java.util.EnumSet;
+import java.util.List;
 import java.util.UUID;
 
 public final class MoneyFlowValidationUtils {
 
-    private static final EnumSet<TransactionSource> SOURCES_REQUIRING_PLAYER = EnumSet.of(
+    private static final List<TransactionSource> SOURCES_REQUIRING_PLAYER = List.of(
             TransactionSource.ADMIN_COMMAND,
             TransactionSource.PLAYER
     );
